@@ -1,32 +1,55 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Header } from '@/components/Header';
+import { StatusBar } from 'expo-status-bar';
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ 
-      tabBarActiveTintColor: '#2563eb',
-      tabBarStyle: { height: 90, paddingBottom: 30 },
-      headerShown: false
-    }}>
-      <Tabs.Screen 
-        name="index" 
-        options={{ 
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => <Ionicons name="grid" size={24} color={color} />
-        }} 
-      />
-      {/* CORRECTION : On utilise "Tracking" avec un T majuscule comme dans tes logs */}
-      <Tabs.Screen 
-        name="Tracking" 
-        options={{ 
-          title: 'Suivi Live',
-          // "radar" n'existe pas, on met "analytics" à la place
-          tabBarIcon: ({ color }) => <Ionicons name="analytics" size={24} color={color} />
-        }} 
-      />
+    <>
+      {/* Barre d'état blanche avec icônes noires */}
+      <StatusBar style="dark" backgroundColor="#FFFFFF" translucent={false} />
       
-      {/* ON ENLÈVE [id] d'ici. Les routes dynamiques ne sont généralement pas des onglets */}
-    </Tabs>
+      <Tabs screenOptions={{ 
+        tabBarActiveTintColor: '#2563eb', 
+        tabBarInactiveTintColor: '#94a3b8',
+        headerShown: false,
+        tabBarStyle: { 
+          height: 80, 
+          paddingBottom: 10,
+          backgroundColor: '#FFFFFF', 
+          borderTopWidth: 1,
+          borderTopColor: '#E2E8F0',
+        },
+      }}>
+      
+        <Tabs.Screen 
+          name="index" 
+          options={{ 
+            title: 'Dashboard',
+            tabBarIcon: ({ color }) => <Ionicons name="grid" size={24} color={color} />
+          }} 
+        />
+
+       
+        <Tabs.Screen 
+          name="Tracking" 
+          options={{ 
+            title: 'Suivi Live',
+            tabBarIcon: ({ color }) => <Ionicons name="analytics" size={24} color={color} />
+          }} 
+        />
+
+
+       
+        <Tabs.Screen 
+          name="Notifications"
+          options={{ href: null }}
+        />
+
+        <Tabs.Screen 
+          name="detail"
+          options={{ href: null }} 
+        />
+      </Tabs>
+    </>
   );
 }

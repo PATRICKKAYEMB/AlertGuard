@@ -26,7 +26,7 @@ export default function Dashboard() {
         <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor="#3B82F6" />
       }
     >
-      <View className="p-6">
+      <View className="">
         <Header title='Dashboard'/>
 
         <View className='items-center w-full mt-10'>

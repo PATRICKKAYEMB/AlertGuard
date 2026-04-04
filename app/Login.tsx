@@ -63,8 +63,8 @@ export default function Login() {
   return (
     <SafeAreaView className="justify-center flex-1 px-8 bg-white">
       <View className="mb-12">
-        <Text className="text-5xl italic font-black tracking-tighter text-blue-600">SENTRY</Text>
-        <Text className="text-lg text-gray-400">Sécurité IA de haut niveau.</Text>
+        <Text className="text-5xl italic font-black tracking-tighter text-center text-blue-600">connexion</Text>
+       
       </View>
 
       <Input 
@@ -89,16 +89,13 @@ export default function Login() {
           <ActivityIndicator size="large" color="#2563eb" />
         ) : (
           <Button 
-            title="Accéder au Terminal" 
+            title="Se connecter" 
             onPress={handleLogin} 
           />
         )}
       </View>
 
-      {/* Petit texte d'aide pour le test */}
-      <Text className="mt-8 text-xs text-center text-gray-400">
-        Connexion sécurisée via JWT & SSL
-      </Text>
+     
     </SafeAreaView>
   );
 }

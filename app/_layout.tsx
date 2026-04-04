@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { socketService } from '@/services/socketService';
+import { NotificationProvider } from '@/context/NotificationContext';
 import { View, ActivityIndicator } from 'react-native';
 import "../global.css";
 
@@ -12,9 +13,8 @@ function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const segments = useSegments();
   const router = useRouter();
-  const qc = useQueryClient();
+  // On ne récupère plus qc (QueryClient) ici pour le socket
 
-  // 1. Vérification du Token à chaque changement de route
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('userToken');
@@ -23,34 +23,19 @@ function AppContent() {
     checkAuth();
   }, [segments]);
 
-  // 2. Logique de Redirection Automatique (VITAL)
   useEffect(() => {
     if (isAuthenticated === null) return;
-
     const inTabsGroup = segments[0] === '(tabs)';
 
     if (!isAuthenticated && inTabsGroup) {
-      // Pas de token mais tente d'aller dans le Dashboard -> Retour au Login
       router.replace('/Login');
     } else if (isAuthenticated && segments[0] === 'Login') {
-      // Token présent sur la page Login -> Direction Dashboard
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, segments]);
 
-  // 3. 🛰️ ACTIVATION DU TEMPS RÉEL (Socket)
-  useEffect(() => {
-    if (isAuthenticated) {
-      const ws = socketService((data) => {
-        console.log("🔔 Alerte AlertGuard reçue:", data);
-        // Rafraîchit les stats et les listes de détection automatiquement
-        qc.invalidateQueries({ queryKey: ['stats'] });
-        qc.invalidateQueries({ queryKey: ['detections'] });
-      });
-
-      return () => ws.close(); 
-    }
-  }, [isAuthenticated, qc]);
+  // ❌ ON SUPPRIME LE BLOC useEffect DU SOCKET ICI !!
+  // C'est le NotificationProvider qui gère tout maintenant.
 
   if (isAuthenticated === null) {
     return (
@@ -63,6 +48,7 @@ function AppContent() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Login" />
+      <Stack.Screen name='LogOut'/>
       <Stack.Screen name="(tabs)" />
     </Stack>
   );
@@ -71,7 +57,9 @@ function AppContent() {
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <NotificationProvider>
+        <AppContent />
+      </NotificationProvider>
     </QueryClientProvider>
   );
 }

@@ -23,7 +23,7 @@ export default function Tracking() {
   }
 
   return (
-    <View className="flex-1 p-6 bg-[#071426]">
+    <View className="flex-1  bg-[#071426]">
       <Header title='tracking'/>
       
       <FlatList 
@@ -38,19 +38,24 @@ export default function Tracking() {
             className="flex-row gap-3 p-6 mb-4 mt-6 rounded-lg shadow-sm bg-[#0F1F35] border-[1px] border-[#1E3352]"
           >
             {/* Zone de l'image corrigée */}
-            <View className='w-20 h-20 overflow-hidden bg-black rounded-md'>
-              {item.image ? (
-                <Image 
-                  source={{ uri: `${BASE_URL}${item.image}` }} 
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              ) : (
-                <View className="items-center justify-center flex-1">
-                  <Text className="text-[8px] text-gray-500">NO IMG</Text>
+            <View className='w-20 h-20 overflow-hidden bg-[#1E3352] rounded-md border border-[#3B82F6]/20'>
+                  {item.image ? (
+                    <Image 
+                      // Si item.image commence déjà par http, on ne rajoute pas BASE_URL
+                      source={{ 
+                        uri: item.image.startsWith('http') 
+                          ? item.image 
+                          : `${BASE_URL}${item.image}` 
+                      }} 
+                      className="w-full h-full"
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <View className="items-center justify-center flex-1 bg-gray-900">
+                      <Text className="text-[10px] text-gray-500">Pasimage</Text>
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
 
             <View className='flex-1'>
               <View className='flex-row justify-between '>

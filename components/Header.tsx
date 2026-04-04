@@ -1,36 +1,49 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+// components/Header.tsx
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useNotifications } from '@/context/NotificationContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface HeaderProps {
-  title: string;
-  showBadge?: boolean;
-}
-
-export const Header = ({ title, showBadge = true }: HeaderProps) => {
-  const router = useRouter(); // C'est ici qu'on active la navigation
+export const Header = ({ title }: { title: string }) => {
+  const { unreadCount } = useNotifications();
+  const router = useRouter();
 
   return (
-    <View className="">
-      <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-50">
-        <View>
-  
-          <Text className="text-2xl font-black text-white">{title}</Text>
-        </View>
+    // PARTIE DU DESSUS EN BLANC
+    <SafeAreaView className="bg-white" edges={['top']}>
+      <View className="flex-row items-center justify-between px-6 py-4 border-b border-gray-100">
+        {/* Titre en NOIR pour contraster avec le blanc */}
+        <Text className="text-2xl font-black text-[#071426] uppercase">
+          {title}
+        </Text>
         
-        <TouchableOpacity 
-          onPress={() => router.push('/Notifications')} // Action de la cloche
-          activeOpacity={0.7}
-          className="relative p-3 rounded-2xl"
-        >
-          <Ionicons name="notifications-outline" size={32} color="#FFFFFF" />
-          {showBadge && (
-          <View  className="absolute items-center justify-center w-[17px] h-[17px] bg-red-500 border-2 border-white rounded-full top-3 right-3" >
-            <Text className='text-center text-[11px] text-white'>4</Text>
-          </View>  
-          )}
-        </TouchableOpacity>
+
+        <View className="flex-row items-center gap-3 space-x-4">
+
+             
+              
+               <TouchableOpacity className="relative" onPress={() => router.push('/Notifications')}>
+                {/* Icône de cloche en NOIR ou BLEU FONCÉ */}
+                <Ionicons name="notifications-outline" size={30} color="#071426" />
+                
+                {unreadCount > 0 && (
+                  <View className="absolute items-center justify-center w-5 h-5 bg-red-600 border-2 border-white rounded-full -top-1 -right-1">
+                    <Text className="text-[10px] text-white font-bold">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+
+               <TouchableOpacity className="relative" onPress={() => router.push('/LogOut')}>
+                <Ionicons name="ellipsis-vertical" size={28} color="#071426" />
+                
+              </TouchableOpacity>
+        
+        </View>
+       
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
