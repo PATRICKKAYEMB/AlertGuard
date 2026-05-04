@@ -6,9 +6,13 @@ import { useNotifications } from '@/context/NotificationContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Header = ({ title }: { title: string }) => {
-  const { unreadCount } = useNotifications();
+  const { unreadCount,resetBadge } = useNotifications();
   const router = useRouter();
 
+  const handlePressNotifications = async () => {
+    await resetBadge(); // 2. Vide le compteur côté Backend et Frontend
+    router.push('/Notifications'); // 3. Navigue ensuite
+  };
   return (
     // PARTIE DU DESSUS EN BLANC
     <SafeAreaView className="bg-white" edges={['top']}>
@@ -23,7 +27,7 @@ export const Header = ({ title }: { title: string }) => {
 
              
               
-               <TouchableOpacity className="relative" onPress={() => router.push('/Notifications')}>
+               <TouchableOpacity className="relative" onPress={handlePressNotifications}>
                 {/* Icône de cloche en NOIR ou BLEU FONCÉ */}
                 <Ionicons name="notifications-outline" size={30} color="#071426" />
                 

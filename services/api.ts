@@ -2,7 +2,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const BASE_URL = 'http://172.16.224.228:8000'; 
+export const BASE_URL = 'http://10.73.12.228:8000'; 
 
 
 // --- NOUVELLE FONCTION POUR LE WEBSOCKET ---

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { socketService } from '@/services/socketService';
-import { api } from '@/services/api';
+import { api , getAuthToken  } from '@/services/api';
+
 
 const NotificationContext = createContext<any>(null);
 
@@ -26,14 +27,20 @@ export const NotificationProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
   const resetBadge = async () => {
-    try {
-      await api.post('/notifications/mark_all_as_read/');
-      setUnreadCount(0); // On vide le compteur GLOBALEMENT
-      console.log("✅ Badge global réinitialisé à 0");
-    } catch (error) {
-      console.error("Erreur reset badge:", error);
+  setUnreadCount(0); 
+  try {
+    const token = await getAuthToken(); // Récupère le token frais
+    if (!token) return; 
+
+    await api.post('/notifications/mark_all_as_read/');
+    console.log("✅ Badge réinitialisé sur le serveur");
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      console.error("❌ Session expirée, impossible de reset le badge");
+      // Optionnel: rediriger vers le login ou rafraîchir le token
     }
-  };
+  }
+};
 
   return (
     <NotificationContext.Provider value={{ unreadCount, lastNotification, resetBadge }}>
